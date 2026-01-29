@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { userService } from '../services/user.service';
 import { candidateService } from '../services/candidate.service';
+import { API_URL } from '../api/axios';
 import { User as UserIcon, BookOpen, Code, Briefcase, Save, Loader2, CheckCircle, Sparkles, ShieldCheck, Mail, Phone, Upload, FileText } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -290,7 +291,7 @@ const Profile: React.FC = () => {
                     <div className="flex items-center gap-2 mt-4 ml-4">
                       <FileText className="h-4 w-4 text-primary" />
                       <a 
-                        href={`http://localhost:8080${resumeUrl}`} 
+                        href={`${API_URL}${resumeUrl}`} 
                         target="_blank" 
                         rel="noopener noreferrer"
                         className="text-xs font-bold text-primary hover:underline"

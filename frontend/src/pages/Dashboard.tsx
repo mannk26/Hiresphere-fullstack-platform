@@ -3,6 +3,7 @@ import { useAuth } from '../hooks/useAuth';
 import { jobService } from '../services/job.service';
 import { applicationService } from '../services/application.service';
 import { candidateService } from '../services/candidate.service';
+import { API_URL } from '../api/axios';
 import type { Application, Job, ApplicationStatus, StatusHistory, CandidateProfile } from '../types';
 import { Briefcase, Clock, CheckCircle2, ChevronRight, Loader2, ArrowUpRight, Mail, History, X, Sparkles, TrendingUp, AlertCircle, Users, Phone, Code, FileText, UserCircle, Building } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -545,7 +546,7 @@ const Dashboard: React.FC = () => {
                           <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Resume Asset</p>
                           {selectedCandidateProfile.resumeUrl ? (
                             <a 
-                              href={`http://localhost:8080${selectedCandidateProfile.resumeUrl}`}
+                              href={`${API_URL}${selectedCandidateProfile.resumeUrl}`}
                               target="_blank"
                               rel="noopener noreferrer"
                               className="text-xl font-black text-primary bg-primary/5 p-4 rounded-2xl border border-primary/10 flex items-center gap-3 hover:bg-primary/10 transition-colors"
