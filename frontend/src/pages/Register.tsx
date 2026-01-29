@@ -24,6 +24,7 @@ const Register: React.FC = () => {
       await register({ email, password, role, firstName, lastName });
       navigate('/dashboard');
     } catch (err: unknown) {
+      console.error('Registration error detail:', err);
       if (axios.isAxiosError(err) && err.response?.data) {
         if (typeof err.response.data === 'object') {
           const messages = Object.values(err.response.data).join(', ');
