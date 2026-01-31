@@ -19,5 +19,12 @@ export const candidateService = {
   async getProfileByApplication(applicationId: number): Promise<CandidateProfile> {
     const response = await api.get(`/applications/${applicationId}/profile`);
     return response.data;
+  },
+
+  async viewResume(resumeUrl: string): Promise<void> {
+    const response = await api.get(resumeUrl, { responseType: 'blob' });
+    const blob = new Blob([response.data], { type: 'application/pdf' });
+    const url = window.URL.createObjectURL(blob);
+    window.open(url, '_blank');
   }
 };

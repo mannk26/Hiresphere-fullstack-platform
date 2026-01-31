@@ -545,15 +545,13 @@ const Dashboard: React.FC = () => {
                        <div className="space-y-1">
                           <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Resume Asset</p>
                           {selectedCandidateProfile.resumeUrl ? (
-                            <a 
-                              href={`${API_URL}${selectedCandidateProfile.resumeUrl}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-xl font-black text-primary bg-primary/5 p-4 rounded-2xl border border-primary/10 flex items-center gap-3 hover:bg-primary/10 transition-colors"
+                            <button 
+                              onClick={() => candidateService.viewResume(selectedCandidateProfile.resumeUrl!)}
+                              className="w-full text-xl font-black text-primary bg-primary/5 p-4 rounded-2xl border border-primary/10 flex items-center gap-3 hover:bg-primary/10 transition-colors"
                             >
                               <FileText className="h-5 w-5" />
                               Download/View PDF
-                            </a>
+                            </button>
                           ) : (
                             <p className="text-xl font-black text-gray-400 bg-gray-50 p-4 rounded-2xl border border-gray-100 italic">
                               No Resume Attached

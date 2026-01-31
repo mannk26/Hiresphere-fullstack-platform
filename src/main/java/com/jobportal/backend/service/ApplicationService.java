@@ -163,10 +163,22 @@ public class ApplicationService {
                 .location(app.getJob().getLocation())
                 .build();
 
+        // Fetch resumeUrl from linked profile or fallback to user's profile
+        String resumeUrl = null;
+        if (app.getCandidateProfile() != null && app.getCandidateProfile().getResumeUrl() != null) {
+            resumeUrl = app.getCandidateProfile().getResumeUrl();
+        } else {
+            // Force fetch latest profile from repository in case it wasn't linked or was updated
+            resumeUrl = candidateProfileRepository.findByUserId(app.getUser().getId())
+                    .map(CandidateProfile::getResumeUrl)
+                    .orElse(null);
+        }
+
         return ApplicationResponse.builder()
                 .id(app.getId())
                 .userId(app.getUser().getId())
                 .userEmail(app.getUser().getEmail())
+                .resumeUrl(resumeUrl)
                 .job(jobDto)
                 .status(app.getStatus())
                 .appliedAt(app.getAppliedAt())

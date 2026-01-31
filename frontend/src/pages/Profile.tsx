@@ -290,14 +290,13 @@ const Profile: React.FC = () => {
                   {resumeUrl && !resume && (
                     <div className="flex items-center gap-2 mt-4 ml-4">
                       <FileText className="h-4 w-4 text-primary" />
-                      <a 
-                        href={`${API_URL}${resumeUrl}`} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
+                      <button 
+                        type="button"
+                        onClick={() => candidateService.viewResume(resumeUrl)}
                         className="text-xs font-bold text-primary hover:underline"
                       >
                         View Current Resume
-                      </a>
+                      </button>
                     </div>
                   )}
                 </div>
