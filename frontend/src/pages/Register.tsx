@@ -41,7 +41,10 @@ const Register: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white flex relative overflow-hidden">
+    <div className="min-h-screen bg-mesh flex relative overflow-hidden">
+      {/* Dynamic Grid Background for the whole page */}
+      <div className="absolute inset-0 bg-grid-pattern opacity-20 pointer-events-none -z-10" />
+
       {/* Left Side: Visual/Branding (Desktop Only) */}
       <div className="hidden lg:flex lg:w-2/5 relative bg-gray-900 items-center justify-center p-12 overflow-hidden">
         <div className="absolute inset-0 z-0">
@@ -82,7 +85,7 @@ const Register: React.FC = () => {
       </div>
 
       {/* Right Side: Register Form */}
-      <div className="w-full lg:w-3/5 flex flex-col justify-center items-center p-8 bg-dot-pattern overflow-y-auto">
+      <div className="w-full lg:w-3/5 flex flex-col justify-center items-center p-8 overflow-y-auto">
         <div className="w-full max-w-2xl py-12">
           <motion.div
             initial={{ opacity: 0, y: 20 }}

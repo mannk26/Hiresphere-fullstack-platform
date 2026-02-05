@@ -7,8 +7,8 @@ import com.jobportal.backend.model.CandidateProfile;
 import com.jobportal.backend.model.User;
 import com.jobportal.backend.repository.CandidateProfileRepository;
 import com.jobportal.backend.repository.UserRepository;
+import com.jobportal.backend.util.SecurityUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,10 +21,11 @@ public class CandidateProfileService {
     private final CandidateProfileRepository candidateProfileRepository;
     private final UserRepository userRepository;
     private final ResumeService resumeService;
+    private final SecurityUtils securityUtils;
 
     @Transactional
     public CandidateProfileResponse updateProfile(CandidateProfileRequest request, MultipartFile resume) throws IOException {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        String email = securityUtils.getCurrentUserEmail();
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 

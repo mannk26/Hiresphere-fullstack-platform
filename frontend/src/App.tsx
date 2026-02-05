@@ -12,12 +12,15 @@ import JobDetails from './pages/JobDetails';
 import Dashboard from './pages/Dashboard';
 import PostJob from './pages/PostJob';
 import Profile from './pages/Profile';
+import { ChatProvider, useChat } from './context/ChatContext';
+import ChatWindow from './components/ChatWindow';
 
 const PrivateRoute: React.FC<{ children: React.ReactNode; role?: string }> = ({ children, role }) => {
   const { user, loading } = useAuth();
   
   if (loading) return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-white">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-mesh relative overflow-hidden">
+      <div className="absolute inset-0 bg-grid-pattern opacity-20 -z-10" />
       <div className="relative">
         <div className="h-20 w-20 rounded-3xl border-4 border-primary/10 border-t-primary animate-spin" />
         <div className="absolute inset-0 flex items-center justify-center">
@@ -34,49 +37,63 @@ const PrivateRoute: React.FC<{ children: React.ReactNode; role?: string }> = ({ 
   return <>{children}</>;
 };
 
+function AppContent() {
+  const { isChatOpen, closeChat, initialRoomId } = useChat();
+  const { user } = useAuth();
+
+  return (
+    <Router>
+      <div className="flex flex-col min-h-screen bg-mesh">
+        <Navbar />
+        <main className="flex-grow">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/jobs" element={<JobListings />} />
+            <Route path="/jobs/:id" element={<JobDetails />} />
+            <Route
+              path="/dashboard"
+              element={
+                <PrivateRoute>
+                  <Dashboard />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/post-job"
+              element={
+                <PrivateRoute role="RECRUITER">
+                  <PostJob />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <PrivateRoute>
+                  <Profile />
+                </PrivateRoute>
+              }
+            />
+            <Route path="*" element={<Navigate to="/" />} />
+          </Routes>
+        </main>
+        <Footer />
+        {user && isChatOpen && (
+          <ChatWindow onClose={closeChat} initialRoomId={initialRoomId} />
+        )}
+      </div>
+    </Router>
+  );
+}
+
 function App() {
   return (
     <AuthProvider>
-      <Router>
-        <div className="flex flex-col min-h-screen bg-white">
-          <Navbar />
-          <main className="flex-grow">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/jobs" element={<JobListings />} />
-              <Route path="/jobs/:id" element={<JobDetails />} />
-              <Route
-                path="/dashboard"
-                element={
-                  <PrivateRoute>
-                    <Dashboard />
-                  </PrivateRoute>
-                }
-              />
-              <Route
-                path="/post-job"
-                element={
-                  <PrivateRoute role="RECRUITER">
-                    <PostJob />
-                  </PrivateRoute>
-                }
-              />
-              <Route
-                path="/profile"
-                element={
-                  <PrivateRoute>
-                    <Profile />
-                  </PrivateRoute>
-                }
-              />
-              <Route path="*" element={<Navigate to="/" />} />
-            </Routes>
-          </main>
-          <Footer />
-        </div>
-      </Router>
+      <ChatProvider>
+        <AppContent />
+      </ChatProvider>
     </AuthProvider>
   );
 }

@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
-import { Briefcase, LogOut, User, Menu, X, Bell, Check, Clock } from 'lucide-react';
+import { useChat } from '../context/ChatContext';
+import { Briefcase, LogOut, User, Menu, X, Bell, Check, Clock, MessageSquare } from 'lucide-react';
 import { notificationService } from '../services/notification.service';
-import type { Notification } from '../types';
+import { type Notification } from '../types';
 import { formatDistanceToNow } from 'date-fns';
 
 const Navbar: React.FC = () => {
   const { user, logout } = useAuth();
+  const { openChat } = useChat();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>([]);
@@ -53,7 +55,7 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    <nav className="glass sticky top-0 z-50 border-b border-gray-100/50">
+    <nav className="glass sticky top-0 z-50 border-b border-gray-100/30 backdrop-blur-2xl">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-20">
           <div className="flex items-center">
@@ -91,6 +93,15 @@ const Navbar: React.FC = () => {
                   Dashboard
                 </Link>
                 <div className="flex items-center space-x-4 ml-4 pl-4 border-l border-gray-200">
+                  {/* Chat Toggle */}
+                  <button
+                    onClick={() => openChat()}
+                    className="p-2 text-gray-500 hover:text-primary transition-colors relative"
+                    title="Open Chats"
+                  >
+                    <MessageSquare className="h-5 w-5" />
+                  </button>
+
                   {/* Notifications */}
                   <div className="relative">
                     <button

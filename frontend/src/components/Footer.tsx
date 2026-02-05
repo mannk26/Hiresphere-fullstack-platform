@@ -4,8 +4,9 @@ import { Briefcase, Github, Linkedin, Twitter, Mail, Heart } from 'lucide-react'
 
 const Footer: React.FC = () => {
   return (
-    <footer className="bg-white border-t border-gray-100 pt-16 pb-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <footer className="bg-mesh border-t border-gray-100/50 pt-24 pb-12 relative overflow-hidden">
+      <div className="absolute inset-0 bg-grid-pattern opacity-20 -z-10" />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
           <div className="col-span-1 md:col-span-1">
             <Link to="/" className="flex items-center space-x-2 mb-6">
@@ -72,8 +73,8 @@ const Footer: React.FC = () => {
             © {new Date().getFullYear()} HireSphere. All rights reserved.
           </p>
           <div className="flex items-center gap-1 text-xs text-gray-400 font-medium">
-            <span>Made with</span>
-            <Heart className="h-3 w-3 text-red-500 fill-red-500" />
+            <span>Product</span>
+
             <span>by</span>
             <span className="text-gray-900 font-bold">Mrityunjay</span>
           </div>

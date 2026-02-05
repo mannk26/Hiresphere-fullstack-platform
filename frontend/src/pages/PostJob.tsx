@@ -31,10 +31,11 @@ const PostJob: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-      {/* Background Orbs */}
-      <div className="absolute top-0 right-0 w-[40%] h-[40%] bg-primary/5 blur-[120px] -z-10" />
-      <div className="absolute bottom-0 left-0 w-[40%] h-[40%] bg-indigo-500/5 blur-[120px] -z-10" />
+    <div className="min-h-screen bg-mesh py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+      {/* Background Grid */}
+      <div className="absolute inset-0 bg-grid-pattern opacity-30 -z-10" />
+      <div className="absolute top-[-10%] right-[-5%] w-[60%] h-[60%] bg-primary/5 blur-[120px] -z-10 animate-pulse" />
+      <div className="absolute bottom-[-10%] left-[-5%] w-[60%] h-[60%] bg-indigo-500/5 blur-[120px] -z-10 animate-pulse" style={{ animationDelay: '2s' }} />
 
       <div className="max-w-4xl mx-auto">
         <motion.button

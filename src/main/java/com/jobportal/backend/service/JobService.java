@@ -7,13 +7,13 @@ import com.jobportal.backend.model.Job;
 import com.jobportal.backend.repository.JobRepository;
 import com.jobportal.backend.repository.UserRepository;
 import com.jobportal.backend.model.User;
+import com.jobportal.backend.util.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,78 +23,80 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class JobService {
-    private final JobRepository jobRepository;
-    private final UserRepository userRepository;
+        private final JobRepository jobRepository;
+        private final UserRepository userRepository;
+        private final SecurityUtils securityUtils;
 
-    @Transactional
-    public JobResponse createJob(JobRequest request) {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User recruiter = userRepository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        @Transactional
+        public JobResponse createJob(JobRequest request) {
+                String email = securityUtils.getCurrentUserEmail();
+                User recruiter = userRepository.findByEmail(email)
+                                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-        log.info("Creating new job posting: '{}' for company: '{}'", request.getTitle(), request.getCompanyName());
-        Job job = Job.builder()
-                .title(request.getTitle())
-                .description(request.getDescription())
-                .companyName(request.getCompanyName())
-                .location(request.getLocation())
-                .salaryRange(request.getSalaryRange())
-                .jobType(request.getJobType())
-                .experienceLevel(request.getExperienceLevel())
-                .recruiter(recruiter)
-                .build();
-        return convertToResponse(jobRepository.save(job));
-    }
-
-    public Page<JobResponse> getAllJobs(int page, int size, String sortBy, String search) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy).descending());
-
-        Page<Job> jobPage;
-        if (search != null && !search.isEmpty()) {
-            jobPage = jobRepository.findByTitleContainingIgnoreCaseOrLocationContainingIgnoreCase(
-                    search, search, pageable);
-        } else {
-            jobPage = jobRepository.findAll(pageable);
+                log.info("Creating new job posting: '{}' for company: '{}'", request.getTitle(),
+                                request.getCompanyName());
+                Job job = Job.builder()
+                                .title(request.getTitle())
+                                .description(request.getDescription())
+                                .companyName(request.getCompanyName())
+                                .location(request.getLocation())
+                                .salaryRange(request.getSalaryRange())
+                                .jobType(request.getJobType())
+                                .experienceLevel(request.getExperienceLevel())
+                                .recruiter(recruiter)
+                                .build();
+                return convertToResponse(jobRepository.save(job));
         }
 
-        return jobPage.map(this::convertToResponse);
-    }
+        public Page<JobResponse> getAllJobs(int page, int size, String sortBy, String search, String jobType,
+                        String experienceLevel) {
+                log.info("Fetching jobs with filters - search: {}, jobType: {}, experienceLevel: {}, page: {}, size: {}",
+                                search, jobType, experienceLevel, page, size);
+                Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy).descending());
 
-    public JobResponse getJobById(Long id) {
-        Job job = jobRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Job not found with id: " + id));
-        return convertToResponse(job);
-    }
+                org.springframework.data.jpa.domain.Specification<Job> spec = com.jobportal.backend.repository.JobSpecification
+                                .withFilters(search, jobType, experienceLevel);
 
-    public void deleteJob(Long id) {
-        log.warn("Soft-deleting job with ID: {}", id);
+                Page<Job> jobPage = jobRepository.findAll(spec, pageable);
 
-        Job job = jobRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Job not found with id: " + id));
+                return jobPage.map(this::convertToResponse);
+        }
 
-        // This will trigger the @SQLDelete update statement
-        jobRepository.delete(job);
-    }
+        public JobResponse getJobById(Long id) {
+                Job job = jobRepository.findById(id)
+                                .orElseThrow(() -> new ResourceNotFoundException("Job not found with id: " + id));
+                return convertToResponse(job);
+        }
 
-    public List<JobResponse> getJobsByRecruiter(String email) {
-        User recruiter = userRepository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-        return jobRepository.findByRecruiter(recruiter).stream()
-                .map(this::convertToResponse)
-                .toList();
-    }
+        public void deleteJob(Long id) {
+                log.warn("Soft-deleting job with ID: {}", id);
 
-    private JobResponse convertToResponse(Job job) {
-        return JobResponse.builder()
-                .id(job.getId())
-                .title(job.getTitle())
-                .description(job.getDescription())
-                .companyName(job.getCompanyName())
-                .location(job.getLocation())
-                .salaryRange(job.getSalaryRange())
-                .jobType(job.getJobType())
-                .experienceLevel(job.getExperienceLevel())
-                .createdAt(job.getCreatedAt())
-                .build();
-    }
+                Job job = jobRepository.findById(id)
+                                .orElseThrow(() -> new ResourceNotFoundException("Job not found with id: " + id));
+
+                // This will trigger the @SQLDelete update statement
+                jobRepository.delete(job);
+        }
+
+        public List<JobResponse> getJobsByRecruiter(String email) {
+                User recruiter = userRepository.findByEmail(email)
+                                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+                return jobRepository.findByRecruiter(recruiter).stream()
+                                .map(this::convertToResponse)
+                                .toList();
+        }
+
+        private JobResponse convertToResponse(Job job) {
+                return JobResponse.builder()
+                                .id(job.getId())
+                                .title(job.getTitle())
+                                .description(job.getDescription())
+                                .companyName(job.getCompanyName())
+                                .location(job.getLocation())
+                                .salaryRange(job.getSalaryRange())
+                                .jobType(job.getJobType())
+                                .experienceLevel(job.getExperienceLevel())
+                                .createdAt(job.getCreatedAt())
+                                .build();
+        }
 }

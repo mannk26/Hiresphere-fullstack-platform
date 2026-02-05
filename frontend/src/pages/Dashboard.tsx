@@ -3,14 +3,16 @@ import { useAuth } from '../hooks/useAuth';
 import { jobService } from '../services/job.service';
 import { applicationService } from '../services/application.service';
 import { candidateService } from '../services/candidate.service';
-import { API_URL } from '../api/axios';
-import type { Application, Job, ApplicationStatus, StatusHistory, CandidateProfile } from '../types';
-import { Briefcase, Clock, CheckCircle2, ChevronRight, Loader2, ArrowUpRight, Mail, History, X, Sparkles, TrendingUp, AlertCircle, Users, Phone, Code, FileText, UserCircle, Building } from 'lucide-react';
+import { chatService } from '../services/chat.service';
+import { useChat } from '../context/ChatContext';
+import { type Application, type Job, type ApplicationStatus, type StatusHistory, type CandidateProfile } from '../types';
+import { Briefcase, Clock, CheckCircle2, ChevronRight, Loader2, ArrowUpRight, Mail, History, X, Sparkles, TrendingUp, AlertCircle, Users, Phone, Code, FileText, UserCircle, Building, MessageSquare } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const Dashboard: React.FC = () => {
   const { user } = useAuth();
+  const { openChat } = useChat();
   const [applications, setApplications] = useState<Application[]>([]);
   const [recruiterApps, setRecruiterApps] = useState<Application[]>([]);
   const [postedJobs, setPostedJobs] = useState<Job[]>([]);
@@ -83,6 +85,15 @@ const Dashboard: React.FC = () => {
     }
   };
 
+  const handleInitiateChat = async (candidateId: number) => {
+    try {
+      const room = await chatService.initiateChat(candidateId);
+      openChat(room.id);
+    } catch (error) {
+      console.error('Failed to initiate chat', error);
+    }
+  };
+
   const stats = user?.role === 'CANDIDATE' ? [
     { label: 'Applications', value: applications.length, icon: <Briefcase className="h-6 w-6 text-blue-600" />, color: 'blue' },
     { label: 'Pending', value: applications.filter(a => a.status === 'APPLIED').length, icon: <Clock className="h-6 w-6 text-amber-600" />, color: 'amber' },
@@ -94,10 +105,11 @@ const Dashboard: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-white py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden bg-dot-pattern">
+    <div className="min-h-screen bg-mesh py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
       {/* Background accents */}
-      <div className="absolute top-0 right-0 w-[50%] h-[50%] bg-primary/10 blur-[140px] -z-10 animate-pulse" />
-      <div className="absolute bottom-0 left-0 w-[50%] h-[50%] bg-indigo-500/10 blur-[140px] -z-10 animate-pulse" style={{ animationDelay: '2s' }} />
+      <div className="absolute top-0 left-0 w-full h-full bg-grid-pattern opacity-30 -z-10" />
+      <div className="absolute top-[-10%] right-[-5%] w-[60%] h-[60%] bg-primary/5 blur-[120px] -z-10 animate-pulse" />
+      <div className="absolute bottom-[-10%] left-[-5%] w-[60%] h-[60%] bg-indigo-500/5 blur-[120px] -z-10 animate-pulse" style={{ animationDelay: '2s' }} />
 
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-10 mb-20 text-center lg:text-left">
@@ -372,10 +384,17 @@ const Dashboard: React.FC = () => {
                               </button>
                               <button
                                 onClick={() => fetchHistory(app.id)}
-                                className="h-10 w-10 flex items-center justify-center bg-gray-50 text-gray-400 hover:text-primary rounded-lg transition-all mr-2"
+                                className="h-10 w-10 flex items-center justify-center bg-gray-50 text-gray-400 hover:text-primary rounded-lg transition-all"
                                 title="Audit Trail"
                               >
                                 <History className="h-5 w-5" />
+                              </button>
+                              <button
+                                onClick={() => handleInitiateChat(app.userId)}
+                                className="h-10 w-10 flex items-center justify-center bg-blue-50 text-blue-400 hover:bg-blue-500 hover:text-white rounded-lg transition-all mr-2"
+                                title="Message Candidate"
+                              >
+                                <MessageSquare className="h-5 w-5" />
                               </button>
                               <button
                                 onClick={() => handleStatusUpdate(app.id, 'SHORTLISTED')}

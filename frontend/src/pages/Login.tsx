@@ -32,7 +32,10 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white flex relative overflow-hidden">
+    <div className="min-h-screen bg-mesh flex relative overflow-hidden">
+      {/* Dynamic Grid Background for the whole page */}
+      <div className="absolute inset-0 bg-grid-pattern opacity-20 pointer-events-none -z-10" />
+      
       {/* Left Side: Visual/Branding (Desktop Only) */}
       <div className="hidden lg:flex lg:w-1/2 relative bg-gray-900 items-center justify-center p-12 overflow-hidden">
         <div className="absolute inset-0 z-0">
@@ -74,7 +77,7 @@ const Login: React.FC = () => {
       </div>
 
       {/* Right Side: Login Form */}
-      <div className="w-full lg:w-1/2 flex flex-col justify-center items-center p-8 bg-dot-pattern">
+      <div className="w-full lg:w-1/2 flex flex-col justify-center items-center p-8 overflow-y-auto">
         <div className="w-full max-w-md">
           <motion.div
             initial={{ opacity: 0, y: 20 }}

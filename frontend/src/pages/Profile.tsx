@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { userService } from '../services/user.service';
 import { candidateService } from '../services/candidate.service';
-import { API_URL } from '../api/axios';
 import { User as UserIcon, BookOpen, Code, Briefcase, Save, Loader2, CheckCircle, Sparkles, ShieldCheck, Mail, Phone, Upload, FileText } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -111,10 +110,11 @@ const Profile: React.FC = () => {
   );
 
   return (
-    <div className="min-h-screen bg-white py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-      {/* Background Orbs */}
-      <div className="absolute top-0 left-0 w-[40%] h-[40%] bg-primary/5 blur-[120px] -z-10" />
-      <div className="absolute bottom-0 right-0 w-[40%] h-[40%] bg-blue-500/5 blur-[120px] -z-10" />
+    <div className="min-h-screen bg-mesh py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+      {/* Background Grid */}
+      <div className="absolute inset-0 bg-grid-pattern opacity-30 -z-10" />
+      <div className="absolute top-[-10%] left-[-5%] w-[60%] h-[60%] bg-primary/5 blur-[120px] -z-10 animate-pulse" />
+      <div className="absolute bottom-[-10%] right-[-5%] w-[60%] h-[60%] bg-blue-500/5 blur-[120px] -z-10 animate-pulse" style={{ animationDelay: '2s' }} />
 
       <div className="max-w-4xl mx-auto">
         <header className="mb-16">

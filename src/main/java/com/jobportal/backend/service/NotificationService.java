@@ -6,8 +6,8 @@ import com.jobportal.backend.model.Notification;
 import com.jobportal.backend.model.User;
 import com.jobportal.backend.repository.NotificationRepository;
 import com.jobportal.backend.repository.UserRepository;
+import com.jobportal.backend.util.SecurityUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,9 +19,10 @@ import java.util.stream.Collectors;
 public class NotificationService {
     private final NotificationRepository notificationRepository;
     private final UserRepository userRepository;
+    private final SecurityUtils securityUtils;
 
     public List<NotificationResponse> getMyNotifications() {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        String email = securityUtils.getCurrentUserEmail();
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
@@ -40,7 +41,7 @@ public class NotificationService {
     }
 
     public long getUnreadCount() {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        String email = securityUtils.getCurrentUserEmail();
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
         return notificationRepository.countByUserIdAndIsReadFalse(user.getId());

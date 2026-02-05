@@ -1,10 +1,10 @@
 import api from '../api/axios';
-import type { Job, PageResponse, JobRequest } from '../types';
+import { type Job, type PageResponse, type JobRequest } from '../types';
 
 export const jobService = {
-  async getAllJobs(page = 0, size = 10, search = ''): Promise<PageResponse<Job>> {
+  async getAllJobs(page = 0, size = 10, search = '', jobType = '', experienceLevel = ''): Promise<PageResponse<Job>> {
     const response = await api.get('/jobs', {
-      params: { page, size, search }
+      params: { page, size, search, jobType, experienceLevel }
     });
     return response.data;
   },

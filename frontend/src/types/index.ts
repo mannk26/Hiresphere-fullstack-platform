@@ -1,3 +1,23 @@
+export interface ChatMessage {
+  id?: number;
+  chatRoomId: number;
+  senderId?: number;
+  content: string;
+  timestamp?: string;
+  isRead?: boolean;
+}
+
+export interface ChatRoom {
+  id: number;
+  recruiterId: number;
+  recruiterName: string;
+  candidateId: number;
+  candidateName: string;
+  lastMessage?: string;
+  lastMessageTimestamp?: string;
+  unreadCount?: number;
+}
+
 export interface User {
   id: number;
   email: string;

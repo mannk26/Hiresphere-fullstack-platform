@@ -6,6 +6,7 @@ import com.jobportal.backend.repository.ApplicationRepository;
 import com.jobportal.backend.repository.CandidateProfileRepository;
 import com.jobportal.backend.repository.UserRepository;
 import com.jobportal.backend.service.ResumeService;
+import com.jobportal.backend.util.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
@@ -14,8 +15,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,6 +35,7 @@ public class ResumeController {
     private final CandidateProfileRepository candidateProfileRepository;
     private final ApplicationRepository applicationRepository;
     private final UserRepository userRepository;
+    private final SecurityUtils securityUtils;
 
     @GetMapping("/{filename:.+}")
     public ResponseEntity<Resource> getResume(@PathVariable String filename) {
@@ -44,14 +44,7 @@ public class ResumeController {
             String decodedFilename = URLDecoder.decode(filename, StandardCharsets.UTF_8.toString());
             log.info("Request to view resume: {} (decoded: {})", filename, decodedFilename);
             
-            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            
-//            if (auth == null || !auth.isAuthenticated() || auth.getName().equals("anonymousUser")) {
-//                log.warn("Unauthorized access attempt to resume: {}", decodedFilename);
-//                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-//            }
-
-            String email = auth.getName();
+            String email = securityUtils.getCurrentUserEmail();
             User currentUser = userRepository.findByEmail(email)
                    .orElseThrow(() -> new RuntimeException("Current user not found: " + email));
 

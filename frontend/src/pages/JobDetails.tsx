@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { jobService } from '../services/job.service';
 import { applicationService } from '../services/application.service';
-import type { Job } from '../types';
+import { type Job } from '../types';
 import { useAuth } from '../hooks/useAuth';
 import { MapPin, Briefcase, DollarSign, ChevronLeft, Send, CheckCircle2, Loader2, Building2, Sparkles, ShieldCheck, Calendar, ArrowUpRight } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -85,10 +85,11 @@ const JobDetails: React.FC = () => {
   );
 
   return (
-    <div className="min-h-screen bg-white py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-      {/* Background Orbs */}
-      <div className="absolute top-0 right-0 w-[40%] h-[40%] bg-primary/5 blur-[120px] -z-10" />
-      <div className="absolute bottom-0 left-0 w-[40%] h-[40%] bg-blue-500/5 blur-[120px] -z-10" />
+    <div className="min-h-screen bg-mesh py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+      {/* Background Grid */}
+      <div className="absolute inset-0 bg-grid-pattern opacity-30 -z-10" />
+      <div className="absolute top-[-10%] right-[-5%] w-[60%] h-[60%] bg-primary/5 blur-[120px] -z-10 animate-pulse" />
+      <div className="absolute bottom-[-10%] left-[-5%] w-[60%] h-[60%] bg-blue-500/5 blur-[120px] -z-10 animate-pulse" style={{ animationDelay: '2s' }} />
 
       <div className="max-w-5xl mx-auto">
         <motion.button

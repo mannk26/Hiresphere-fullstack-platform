@@ -1,5 +1,5 @@
 import api from '../api/axios';
-import type { Application, ApplicationStatus, StatusHistory } from '../types';
+import { type Application, type ApplicationStatus, type StatusHistory } from '../types';
 
 export const applicationService = {
   async applyToJob(jobId: number): Promise<Application> {

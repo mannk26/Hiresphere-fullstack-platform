@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { jobService } from '../services/job.service';
-import type { Job } from '../types';
+import { type Job } from '../types';
 import { Search, MapPin, Briefcase, DollarSign, Clock, ChevronRight, Loader2, Sparkles, SlidersHorizontal, ArrowUpRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -10,18 +10,20 @@ const JobListings: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [page, setPage] = useState(0);
+  const [selectedJobType, setSelectedJobType] = useState<string>('');
+  const [selectedExperienceLevel, setSelectedExperienceLevel] = useState<string>('');
 
   const fetchJobs = useCallback(async () => {
     setLoading(true);
     try {
-      const data = await jobService.getAllJobs(page, 10, searchTerm);
+      const data = await jobService.getAllJobs(page, 10, searchTerm, selectedJobType, selectedExperienceLevel);
       setJobs(data.content);
     } catch (error) {
       console.error('Failed to fetch jobs', error);
     } finally {
       setLoading(false);
     }
-  }, [page, searchTerm]);
+  }, [page, searchTerm, selectedJobType, selectedExperienceLevel]);
 
   useEffect(() => {
     fetchJobs();
@@ -34,10 +36,11 @@ const JobListings: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden bg-dot-pattern">
+    <div className="min-h-screen bg-mesh py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
       {/* Dynamic background accents */}
-      <div className="absolute top-0 right-0 w-[40%] h-[40%] bg-primary/10 blur-[140px] -z-10 animate-pulse" />
-      <div className="absolute bottom-0 left-0 w-[40%] h-[40%] bg-indigo-500/10 blur-[140px] -z-10 animate-pulse" style={{ animationDelay: '2s' }} />
+      <div className="absolute top-0 left-0 w-full h-full bg-grid-pattern opacity-30 -z-10" />
+      <div className="absolute top-[-10%] right-[-5%] w-[60%] h-[60%] bg-primary/5 blur-[120px] -z-10 animate-pulse" />
+      <div className="absolute bottom-[-10%] left-[-5%] w-[60%] h-[60%] bg-indigo-500/5 blur-[120px] -z-10 animate-pulse" style={{ animationDelay: '2s' }} />
 
       <div className="max-w-7xl mx-auto">
         <header className="mb-20 text-center lg:text-left">
@@ -49,7 +52,7 @@ const JobListings: React.FC = () => {
             <Sparkles className="h-4 w-4 text-primary" />
             <span className="text-[10px] font-black text-primary uppercase tracking-[0.2em]">Verified Opportunities</span>
           </motion.div>
-          <motion.h1 
+          <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="text-6xl md:text-8xl font-black text-gray-900 tracking-tighter mb-6 leading-[0.85]"
@@ -62,7 +65,7 @@ const JobListings: React.FC = () => {
         </header>
 
         {/* Search and Filter Bar */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
@@ -90,7 +93,7 @@ const JobListings: React.FC = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-10">
           {/* Filters Sidebar */}
-          <motion.aside 
+          <motion.aside
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.2 }}
@@ -102,26 +105,42 @@ const JobListings: React.FC = () => {
                   <h3 className="text-xl font-black text-gray-900 uppercase tracking-tight">Filters</h3>
                   <SlidersHorizontal className="h-5 w-5 text-gray-400" />
                 </div>
-                
+
                 <div className="space-y-8">
                   <div>
                     <label className="text-xs font-black text-gray-400 uppercase tracking-widest block mb-4">Job Type</label>
                     <div className="space-y-3">
                       {['Full-time', 'Part-time', 'Contract', 'Remote'].map((type) => (
                         <label key={type} className="flex items-center group cursor-pointer">
-                          <input type="checkbox" className="h-5 w-5 rounded-lg border-2 border-gray-200 text-primary focus:ring-primary/20 transition-all cursor-pointer" />
+                          <input
+                            type="checkbox"
+                            className="h-5 w-5 rounded-lg border-2 border-gray-200 text-primary focus:ring-primary/20 transition-all cursor-pointer"
+                            checked={selectedJobType === type}
+                            onChange={() => {
+                              setSelectedJobType(selectedJobType === type ? '' : type);
+                              setPage(0);
+                            }}
+                          />
                           <span className="ml-3 text-sm font-bold text-gray-500 group-hover:text-gray-900 transition-colors">{type}</span>
                         </label>
                       ))}
                     </div>
                   </div>
-                  
+
                   <div className="pt-8 border-t border-gray-50">
                     <label className="text-xs font-black text-gray-400 uppercase tracking-widest block mb-4">Experience</label>
                     <div className="space-y-3">
                       {['Entry Level', 'Mid Level', 'Senior Level'].map((level) => (
                         <label key={level} className="flex items-center group cursor-pointer">
-                          <input type="checkbox" className="h-5 w-5 rounded-lg border-2 border-gray-200 text-primary focus:ring-primary/20 transition-all cursor-pointer" />
+                          <input
+                            type="checkbox"
+                            className="h-5 w-5 rounded-lg border-2 border-gray-200 text-primary focus:ring-primary/20 transition-all cursor-pointer"
+                            checked={selectedExperienceLevel === level}
+                            onChange={() => {
+                              setSelectedExperienceLevel(selectedExperienceLevel === level ? '' : level);
+                              setPage(0);
+                            }}
+                          />
                           <span className="ml-3 text-sm font-bold text-gray-500 group-hover:text-gray-900 transition-colors">{level}</span>
                         </label>
                       ))}
@@ -129,15 +148,23 @@ const JobListings: React.FC = () => {
                   </div>
                 </div>
 
-                <button className="w-full mt-10 py-4 bg-gray-50 text-gray-400 font-black text-xs uppercase tracking-widest rounded-xl hover:bg-primary/5 hover:text-primary transition-all">
+                <button
+                  onClick={() => {
+                    setSelectedJobType('');
+                    setSelectedExperienceLevel('');
+                    setSearchTerm('');
+                    setPage(0);
+                  }}
+                  className="w-full mt-10 py-4 bg-gray-50 text-gray-400 font-black text-xs uppercase tracking-widest rounded-xl hover:bg-primary/5 hover:text-primary transition-all"
+                >
                   Clear All Filters
                 </button>
               </div>
-              
+
               <div className="p-8 rounded-[32px] bg-primary/5 border border-primary/10">
-                 <p className="text-xs font-black text-primary uppercase tracking-widest mb-2">HireSphere Premium</p>
-                 <p className="text-sm text-gray-600 font-medium mb-4">Get noticed by top recruiters 3x faster with our AI matching.</p>
-                 <button className="text-xs font-black text-gray-900 underline">Learn more</button>
+                <p className="text-xs font-black text-primary uppercase tracking-widest mb-2">HireSphere Premium</p>
+                <p className="text-sm text-gray-600 font-medium mb-4">Get noticed by top recruiters 3x faster with our AI matching.</p>
+                <button className="text-xs font-black text-gray-900 underline">Learn more</button>
               </div>
             </div>
           </motion.aside>
@@ -163,7 +190,7 @@ const JobListings: React.FC = () => {
                       className="group relative bg-white p-10 rounded-[40px] border border-gray-100 shadow-sm hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.12)] hover:border-primary/30 transition-all duration-700 overflow-hidden"
                     >
                       <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                      
+
                       <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-10">
                         <div className="flex items-start gap-8">
                           <div className="bg-gray-50 h-20 w-20 rounded-[28px] flex items-center justify-center shrink-0 group-hover:bg-primary transition-all duration-700 shadow-inner group-hover:rotate-6 group-hover:scale-110">
@@ -177,7 +204,7 @@ const JobListings: React.FC = () => {
                               )}
                             </div>
                             <p className="text-xl text-gray-500 font-bold mb-8 tracking-tight">{job.companyName}</p>
-                            
+
                             <div className="flex flex-wrap gap-4">
                               <span className="flex items-center gap-3 bg-gray-50/80 px-5 py-2.5 rounded-2xl text-sm font-bold text-gray-600 border border-gray-100 group-hover:border-primary/10 transition-colors">
                                 <MapPin className="h-5 w-5 text-gray-400 group-hover:text-primary transition-colors" />
@@ -194,7 +221,7 @@ const JobListings: React.FC = () => {
                             </div>
                           </div>
                         </div>
-                        
+
                         <div className="flex flex-row md:flex-col items-center md:items-end justify-between md:justify-center gap-6 border-t md:border-t-0 pt-8 md:pt-0 border-gray-50">
                           <div className="text-right">
                             <p className="text-[10px] font-black text-gray-300 uppercase tracking-[0.3em] mb-1">Posted on</p>
@@ -221,8 +248,8 @@ const JobListings: React.FC = () => {
                 </div>
                 <h3 className="text-2xl font-black text-gray-900 mb-2 tracking-tight">Zero matches found</h3>
                 <p className="text-gray-500 font-medium max-w-xs mx-auto mb-10">We couldn't find any jobs matching your current search criteria.</p>
-                <button 
-                  onClick={() => {setSearchTerm(''); setPage(0);}}
+                <button
+                  onClick={() => { setSearchTerm(''); setPage(0); }}
                   className="px-8 py-4 bg-white border-2 border-gray-100 text-gray-900 font-black rounded-2xl hover:border-primary/20 hover:bg-gray-50 transition-all shadow-sm"
                 >
                   Reset all search filters
@@ -233,15 +260,15 @@ const JobListings: React.FC = () => {
             {/* Pagination Placeholder */}
             {jobs.length > 0 && (
               <div className="pt-12 flex justify-center">
-                 <button className="px-8 py-4 bg-white border-2 border-gray-100 text-gray-900 font-black rounded-2xl hover:border-primary/20 hover:bg-gray-50 transition-all shadow-sm flex items-center gap-2">
-                   Load more opportunities <ChevronRight className="h-4 w-4" />
-                 </button>
+                <button className="px-8 py-4 bg-white border-2 border-gray-100 text-gray-900 font-black rounded-2xl hover:border-primary/20 hover:bg-gray-50 transition-all shadow-sm flex items-center gap-2">
+                  Load more opportunities <ChevronRight className="h-4 w-4" />
+                </button>
               </div>
             )}
           </div>
         </div>
       </div>
-      
+
       {/* Developer Credit */}
       <div className="py-20 text-center">
         <p className="text-[10px] font-black tracking-[0.3em] text-gray-300 uppercase">

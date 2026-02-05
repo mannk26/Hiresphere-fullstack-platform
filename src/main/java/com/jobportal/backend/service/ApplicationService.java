@@ -4,8 +4,8 @@ import com.jobportal.backend.dto.*;
 import com.jobportal.backend.exception.ResourceNotFoundException;
 import com.jobportal.backend.model.*;
 import com.jobportal.backend.repository.*;
+import com.jobportal.backend.util.SecurityUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,10 +22,11 @@ public class ApplicationService {
     private final NotificationRepository notificationRepository;
     private final CandidateProfileRepository candidateProfileRepository;
     private final CandidateProfileService candidateProfileService;
+    private final SecurityUtils securityUtils;
 
     @Transactional
     public ApplicationResponse applyToJob(ApplicationRequest request) {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        String email = securityUtils.getCurrentUserEmail();
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
@@ -80,7 +81,7 @@ public class ApplicationService {
     }
 
     public List<ApplicationResponse> getApplicationsForRecruiter() {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        String email = securityUtils.getCurrentUserEmail();
         User recruiter = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
@@ -92,7 +93,7 @@ public class ApplicationService {
 
     @Transactional
     public ApplicationResponse updateApplicationStatus(Long id, Application.ApplicationStatus status) {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        String email = securityUtils.getCurrentUserEmail();
         User recruiter = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 

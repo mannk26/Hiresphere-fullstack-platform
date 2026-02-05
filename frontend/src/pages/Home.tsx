@@ -5,12 +5,12 @@ import { motion } from 'framer-motion';
 
 const Home: React.FC = () => {
   return (
-    <div className="flex flex-col min-h-screen bg-white overflow-hidden">
+    <div className="flex flex-col min-h-screen bg-mesh overflow-hidden relative">
       {/* Dynamic Background Elements */}
       <div className="fixed inset-0 -z-10 pointer-events-none">
-        <div className="absolute top-0 left-0 w-full h-full bg-dot-pattern opacity-50" />
-        <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-primary/10 rounded-full blur-[140px] animate-pulse" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-indigo-500/10 rounded-full blur-[140px] animate-pulse" style={{ animationDelay: '2s' }} />
+        <div className="absolute top-0 left-0 w-full h-full bg-grid-pattern opacity-40" />
+        <div className="absolute top-[-10%] left-[-10%] w-[70%] h-[70%] bg-primary/5 rounded-full blur-[120px] animate-pulse" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[70%] h-[70%] bg-indigo-500/5 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '2s' }} />
       </div>
 
       {/* Hero Section */}

@@ -1,5 +1,5 @@
 import api from '../api/axios';
-import type { CandidateProfile } from '../types';
+import { type CandidateProfile } from '../types';
 
 export const candidateService = {
   async updateProfile(formData: FormData): Promise<CandidateProfile> {
