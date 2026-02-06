@@ -127,5 +127,25 @@ Hiresphere/
 ## 📄 License
 Distributed under the MIT License. See `LICENSE` for more information.
 
+## Some Screenshots:
+<img width="2199" height="1213" alt="Screenshot 2026-02-06 210805" src="https://github.com/user-attachments/assets/1ca51347-b92b-46df-a4b0-a14aa1982ddf" />
+<img width="2198" height="1215" alt="Screenshot 2026-02-06 210847" src="https://github.com/user-attachments/assets/231193e8-c8d7-47a9-b8a4-072a0faf7b7f" />
+<img width="2198" height="1217" alt="Screenshot 2026-02-06 210946" src="https://github.com/user-attachments/assets/f1bcc437-5460-4f24-8ce2-5a06ccc94373" />
+<img width="2198" height="1215" alt="Screenshot 2026-02-06 211100" src="https://github.com/user-attachments/assets/bd37af5a-5be7-4978-b53b-1459fff4425d" />
+<img width="2198" height="1215" alt="Screenshot 2026-02-06 211121" src="https://github.com/user-attachments/assets/7337384d-2bab-46f1-8df9-db0b36a96dfa" />
+<img width="2200" height="1213" alt="Screenshot 2026-02-06 211147" src="https://github.com/user-attachments/assets/03385df3-9a63-4b53-abc1-18e716bdc193" />
+<img width="2198" height="1214" alt="Screenshot 2026-02-06 211201" src="https://github.com/user-attachments/assets/73144d26-7cd3-4110-95b9-2c1763cd30d5" />
+<img width="2198" height="1215" alt="Screenshot 2026-02-06 211459" src="https://github.com/user-attachments/assets/f50d18ad-ee3b-45e2-8997-9f7c2701bca9" />
+<img width="2199" height="1217" alt="Screenshot 2026-02-06 211749" src="https://github.com/user-attachments/assets/40e0ebc4-7aae-4637-9b66-40ee2dc9a4b1" />
+<img width="2201" height="1211" alt="Screenshot 2026-02-06 211823" src="https://github.com/user-attachments/assets/17e44e6b-abd3-4140-8b88-2a18921b2e50" />
+<img width="2199" height="1218" alt="Screenshot 2026-02-06 211845" src="https://github.com/user-attachments/assets/9aefb748-5d4f-4bdb-b7ae-68da80137358" />
+<img width="2199" height="1213" alt="Screenshot 2026-02-06 211904" src="https://github.com/user-attachments/assets/12475ad3-a2dd-4b6a-9b44-40d32e2d7509" />
+<img width="2199" height="1218" alt="Screenshot 2026-02-06 211928" src="https://github.com/user-attachments/assets/c212ccad-4022-4486-b68c-a6c19c392b66" />
+<img width="2200" height="1219" alt="Screenshot 2026-02-06 212054" src="https://github.com/user-attachments/assets/0008d52b-0c67-4871-b4da-1c21d2fc5987" />
+<img width="2199" height="1219" alt="Screenshot 2026-02-06 212115" src="https://github.com/user-attachments/assets/8a193fa7-a1dc-445a-b4de-c678bad9bd1a" />
+<img width="2196" height="1217" alt="Screenshot 2026-02-06 212135" src="https://github.com/user-attachments/assets/b65895b4-5446-4f2b-9aea-06e75ccfcbfd" />
+
+
+
 ---
-*Developed with ❤️ as an industry-grade portfolio project.*
+*Developed it as an industry-grade portfolio project.*
